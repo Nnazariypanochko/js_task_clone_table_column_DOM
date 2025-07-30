@@ -3,7 +3,13 @@
 const table = document.querySelector('table');
 
 ['tbody', 'thead', 'tfoot'].forEach((section) => {
-  const rows = table.querySelector(section).rows;
+  const sectionElement = table.querySelector(section);
+
+  if (!sectionElement) {
+    return;
+  }
+
+  const rows = sectionElement.rows;
 
   for (const row of rows) {
     const cells = row.cells;
@@ -12,9 +18,16 @@ const table = document.querySelector('table');
       continue;
     }
 
+    const lastCellIndex = cells.length - 1;
+    const potentialClone = cells[lastCellIndex - 1];
+
+    if (potentialClone.innerHTML === cells[1].innerHTML) {
+      continue;
+    }
+
     const secondCell = cells[1];
     const clonedCell = secondCell.cloneNode(true);
 
-    row.insertBefore(clonedCell, cells[cells.length - 1]);
+    row.insertBefore(clonedCell, cells[lastCellIndex]);
   }
 });
